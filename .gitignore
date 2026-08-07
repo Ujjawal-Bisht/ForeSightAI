@@ -1,4 +1,73 @@
-.venv/
+# =========================
+# Python & Virtual Env
+# =========================
 __pycache__/
-**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.env/
+venv/
+.venv/
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+
+# =========================
+# Logs
+# =========================
 *.log
+logs/*
+!logs/.gitkeep
+
+# =========================
+# ML / Data / Models
+# =========================
+data/
+datasets/
+*.csv
+*.tsv
+*.jsonl
+*.parquet
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.npy
+*.npz
+models/
+checkpoints/
+artifacts/
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+*.ipynb
+
+# =========================
+# Cache / Temp
+# =========================
+.cache/
+tmp/
+temp/
+*.tmp
+
+# =========================
+# Build / Dist
+# =========================
+dist/
+build/
+*.whl
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
