@@ -7,7 +7,7 @@ __pycache__/
 *.pyd
 *.so
 *.egg-info/
-.env/
+/.env
 venv/
 .venv/
 
