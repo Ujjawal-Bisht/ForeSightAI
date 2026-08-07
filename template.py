@@ -51,6 +51,10 @@ list_of_files = [
 
     "data/raw/.gitkeep",
     "data/processed/.gitkeep",
+
+    f"src/{project_name}/utils/__init__.py",
+    f"src/{project_name}/utils/common.py",
+    f"src/{project_name}/utils/logger.py",  
 ]
 
 for filePath in list_of_files:
