@@ -33,6 +33,7 @@ list_of_files = [
     # Shared utilities across stages
     f"src/{project_name}/utils/__init__.py",
     f"src/{project_name}/utils/common.py",
+    f"src/{project_name}/utils/logger.py", 
 
     # Config loading + constants (paths, k-range, LLM model name, etc.)
     f"src/{project_name}/config/__init__.py",
@@ -51,10 +52,7 @@ list_of_files = [
 
     "data/raw/.gitkeep",
     "data/processed/.gitkeep",
-
-    f"src/{project_name}/utils/__init__.py",
-    f"src/{project_name}/utils/common.py",
-    f"src/{project_name}/utils/logger.py",  
+     
 ]
 
 for filePath in list_of_files:
