@@ -49,7 +49,6 @@ artifacts/
 # Jupyter
 # =========================
 .ipynb_checkpoints/
-*.ipynb
 
 # =========================
 # Cache / Temp
@@ -72,3 +71,4 @@ build/
 .DS_Store
 Thumbs.db
 /checklist.md
+/notebooks/trials.ipynb
