@@ -20,3 +20,4 @@ pytest-django>=4.8
 
 # Others
 langdetect==1.0.9
+beautifulsoup4==4.15.0
