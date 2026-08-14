@@ -503,7 +503,7 @@ def generate_review_hash(
     return review_hash
 
 
-def is_duplicate_postgres(connection, review_hash, table_name="review_hashes", column="review_hash"):
+def is_duplicate_postgres(connection, review_hash, table_name="review_dedupe", column="review_hash"):
     """
     Check whether a review_hash already exists in a Postgres table.
 
@@ -615,8 +615,9 @@ def preprocess_chunk(
 ):
     stats = Counter()
     clean_records = []
+    valid_before_dedup = 0
 
-    for record in chunk.to_dict(orient="records"):
+    for record_idx, record in enumerate(chunk.to_dict(orient="records")):
 
         clean_record, rejection_reason = preprocess_record(
             record=record,
@@ -628,23 +629,50 @@ def preprocess_chunk(
             stats[rejection_reason] += 1
             continue
 
-        if is_duplicate_postgres(
-            connection=connection,
-            review_hash=clean_record["review_hash"]
-        ):
-            stats["duplicate_records"] += 1
+        valid_before_dedup += 1
+
+        # Use savepoint to isolate database operations
+        savepoint_name = f"sp_{record_idx}"
+        
+        try:
+            # Create savepoint
+            with connection.cursor() as cur:
+                cur.execute(f"SAVEPOINT {savepoint_name}")
+            
+            if is_duplicate_postgres(
+                connection=connection,
+                review_hash=clean_record["review_hash"]
+            ):
+                stats["duplicate_records"] += 1
+                # Release savepoint on success
+                with connection.cursor() as cur:
+                    cur.execute(f"RELEASE {savepoint_name}")
+                continue
+
+            insert_review_hash(
+                review_hash=clean_record["review_hash"],
+                connection=connection
+            )
+
+            clean_records.append(clean_record)
+            # Release savepoint on success
+            with connection.cursor() as cur:
+                cur.execute(f"RELEASE {savepoint_name}")
+        
+        except Exception as e:
+            # Rollback to savepoint on error
+            try:
+                with connection.cursor() as cur:
+                    cur.execute(f"ROLLBACK TO {savepoint_name}")
+            except Exception:
+                pass
+            print(f"[DEBUG] Error at record {record_idx}: {type(e).__name__}: {e}")
+            stats["database_errors"] += 1
             continue
 
-        insert_review_hash(
-            connection=connection,
-            review_hash=clean_record["review_hash"]
-        )
-
-        clean_records.append(clean_record)
-
     stats["input_records"] = len(chunk)
-
-    # Calculate/assign your remaining statistics here
+    stats["valid_before_deduplication"] = valid_before_dedup
+    stats["clean_records"] = len(clean_records)
 
     if clean_records:
         clean_chunk = pd.DataFrame(clean_records)

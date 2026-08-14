@@ -11,7 +11,7 @@ def get_postgres_connection():
 
     return psycopg2.connect(
         host=env("DB_HOST"),
-        port=env("DB_PORT"),
+        port=env.int("DB_PORT"),
         dbname=env("DB_NAME"),
         user=env("DB_USER"),
         password=env("DB_PASSWORD"),
