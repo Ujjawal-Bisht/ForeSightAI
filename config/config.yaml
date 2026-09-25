@@ -1,0 +1,10 @@
+llm:
+  provider: google
+  model: gemini-3.8-flash
+  thinking_level: low
+  max_retries: 2
+  timeout: 60
+
+  feature_extraction:
+    temperature: null
+    max_output_tokens: 2048

@@ -22,3 +22,5 @@ pytest-django>=4.8
 langdetect==1.0.9
 beautifulsoup4==4.15.0
 psycopg[binary]
+yaml
+google-genai
