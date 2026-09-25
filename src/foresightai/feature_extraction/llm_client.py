@@ -5,7 +5,7 @@ from google.genai import types
 
 
 class GeminiClient:
-    """Client wrapper for the Google Gemini API."""
+    """Low-level wrapper around the Google Gemini API."""
 
     def __init__(
         self,
@@ -14,24 +14,20 @@ class GeminiClient:
         thinking_level: str = "low",
         max_output_tokens: int = 2048,
     ) -> None:
-
         if not api_key:
             raise ValueError("Google API key is required.")
-
         if not model:
             raise ValueError("Gemini model is required.")
+        if max_output_tokens <= 0:
+            raise ValueError("max_output_tokens must be positive.")
 
         self.model = model
         self.thinking_level = thinking_level
         self.max_output_tokens = max_output_tokens
-
         self.client = genai.Client(api_key=api_key)
 
     def generate(self, prompt: str) -> str:
-        """
-        Send a prompt to Gemini and return the generated text.
-        """
-
+        """Send a prompt to Gemini and return the text response."""
         if not prompt or not prompt.strip():
             raise ValueError("Prompt cannot be empty.")
 
@@ -48,8 +44,6 @@ class GeminiClient:
         )
 
         if not response.text:
-            raise RuntimeError(
-                "Gemini returned an empty response."
-            )
+            raise RuntimeError("Gemini returned an empty response.")
 
         return response.text
